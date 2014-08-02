@@ -1,0 +1,65 @@
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :cameron.freenode.net 332 jomp16-bot #wekeden :Welcome to the official IRC channel of http://wekeden.net/ | Visit our official Murmur server: 199.58.85.76:20942 | http://bash.org/?244321 |  http://reddit.com/r/Meritism/ | Meritism docs: http://docs.wekeden.net/
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :cameron.freenode.net 333 jomp16-bot #wekeden waratte 1404515213
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :cameron.freenode.net 353 jomp16-bot @ #wekeden :jomp16-bot +jomp16 +hbgreg_otg @ChanServ @Ysmir +Jiangyi +nebkat @waratte
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :cameron.freenode.net 366 jomp16-bot #wekeden :End of /NAMES list.
+
+import java.time.*;
+
+public class Teste {
+    public static void main(String[] args) {
+        Instant instant = Instant.ofEpochSecond(1404515213); // 333 response
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+
+        System.out.println(instant); // 2014-07-04T23:06:53Z
+        System.out.println(localDateTime); // 2014-07-04T23:06:53
+    }
+}
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+Adicionar copyright WTFPL
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+Cachear "User"
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+WHOIS!
+
+[DEBUG] --> (tk.jomp16.irc.netty.NettyEncoder) -> WHOIS jomp16
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :hobana.freenode.net 311 jomp16-bot jomp16 ~jomp16 unaffiliated/jomp16 * :José Olivio Pedrosa
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :hobana.freenode.net 319 jomp16-bot jomp16 :@#jomp16-bot
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :hobana.freenode.net 312 jomp16-bot jomp16 barjavel.freenode.net :Paris, FR
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :hobana.freenode.net 330 jomp16-bot jomp16 jomp16 :is logged in as
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :hobana.freenode.net 318 jomp16-bot jomp16 :End of /WHOIS list.
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+# ChanServ info #jomp16
+
+[DEBUG] --> (tk.jomp16.irc.netty.NettyEncoder) -> PRIVMSG ChanServ :info #jomp16-bot
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :ChanServ!ChanServ@services. NOTICE jomp16-bot :Information on #jomp16-bot:
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :ChanServ!ChanServ@services. NOTICE jomp16-bot :Founder    : jomp16
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :ChanServ!ChanServ@services. NOTICE jomp16-bot :Successor  : freenode-staff
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :ChanServ!ChanServ@services. NOTICE jomp16-bot :Registered : Apr 19 01:02:11 2013 (1 year, 14 weeks, 5 days, 01:04:25 ago)
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :ChanServ!ChanServ@services. NOTICE jomp16-bot :Flags      : GUARD
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :ChanServ!ChanServ@services. NOTICE jomp16-bot :*** End of Info ***
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+CTCP/DCC
+
+# DCC CHAT
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :jomp16!~jomp16@unaffiliated/jomp16 PRIVMSG jomp16-bot :DCC CHAT chat 0 45994
+
+# DCC SEND
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :jomp16!~jomp16@unaffiliated/jomp16 PRIVMSG jomp16-bot :DCC SEND boot-r209.img 0 58864 8747008
+
+# USELESS THING, send my XChat
+[DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :jomp16!~jomp16@unaffiliated/jomp16 PRIVMSG jomp16-bot :SHA-256 checksum for boot-r209.img (remote): 07a605e2b1e047dd3c01db18febe5f6a0c539070b76af84538c6de169745accb

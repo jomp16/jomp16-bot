@@ -1,0 +1,5 @@
+{
+    "currency.respond": "Câmbio: {0} {1} para {2} equivale {3} {2} | 1 {1} para {2} equivale {4}",
+    "currency.help": "Obter câmbio",
+    "currency.usage": "quantidade deCâmbio paraCâmbio"
+}

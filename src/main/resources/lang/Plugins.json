@@ -1,0 +1,14 @@
+{
+    "about.text.about": "jomp16-bot written by jomp16, licensed under WTFPL, source code at https://github.com/jomp16/jomp16-bot",
+    "about.help.text": "Return the info about this bot",
+
+    "commands.text.available.commands": "Available commands: {0}",
+    "commands.help.text": "Return the available commands for you",
+
+    "help.text.with.opt.command": "Command: {0}{1} || Optional commands: [{2}] || Help: {3} || Usage: {0}{1} {4}",
+    "help.text.without.opt.command": "Command: {0}{1} || Help: {2} || Usage: {0}{1} {3}",
+    "help.text.available.commands": "Available help for that commands: {0}",
+    "help.text.not.found": "No help found for that command, maybe the help doesn't exists or you mistyped the command?",
+    "help.help.text": "Get help of a plugin",
+    "help.help.usage": "all||plugin_name"
+}

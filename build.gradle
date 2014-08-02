@@ -1,0 +1,90 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+version = '0.1'
+
+dependencies {
+    testCompile 'junit:junit:+'
+    compile 'org.projectlombok:lombok:+'
+    compile 'net.sf.jopt-simple:jopt-simple:+'
+    compile 'com.google.code.gson:gson:+'
+    compile 'com.google.guava:guava:+'
+    compile 'commons-codec:commons-codec:+'
+    compile 'org.apache.commons:commons-lang3:+'
+    compile 'org.apache.logging.log4j:log4j-api:+'
+    compile 'org.apache.logging.log4j:log4j-core:+'
+    compile 'io.netty:netty-all:4.0.+'
+    compile 'org.javassist:javassist:+'
+    compile 'org.reflections:reflections:+'
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        if (project.name != 'jomp16-bot') {
+            compile project.getRootProject()
+        }
+    }
+
+    clean {
+        delete 'out'
+    }
+
+    task copyConfig(type: Copy) {
+        from 'config.json'
+        into 'out'
+    }
+
+    jar.dependsOn copyConfig
+
+    jar {
+        project.gradle.projectsEvaluated {
+            if (project.name == 'jomp16-bot') {
+                jar.destinationDir = project.getRootProject().file("out")
+            } else {
+                jar.destinationDir = project.getRootProject().file("out/plugins")
+            }
+
+            manifest {
+                if (project.name == 'jomp16-bot') {
+                    attributes 'Main-Class': 'tk.jomp16.bot.BotMain',
+                            'Implementation-Title': project.name,
+                            'Implementation-Version': project.version
+                } else {
+                    attributes 'Implementation-Title': project.name,
+                            'Implementation-Version': project.version
+                }
+            }
+
+            if (project.name == 'jomp16-bot') {
+                from rootProject.configurations.compile.drop(1).collect {
+                    it.isDirectory() ? it : zipTree(it)
+                }
+            } else {
+                from configurations.compile.minus(rootProject.configurations.compile).drop(1).collect {
+                    it.isDirectory() ? it : zipTree(it)
+                }
+            }
+        }
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+}

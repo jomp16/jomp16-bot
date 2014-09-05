@@ -1,3 +1,11 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.parser;
 
 import lombok.NonNull;
@@ -12,12 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j2
-public abstract class IrcParser {
-    private static final Map<IrcCommand, IrcParser> commandParsers = new HashMap<IrcCommand, IrcParser>() {{
+public class IrcParser {
+    private final Map<IrcCommand, Parser> commandParsers = new HashMap<IrcCommand, Parser>() {{
         MotdParser motdParser = new MotdParser();
         ChannelInfoParser channelInfoParser = new ChannelInfoParser();
         WhoisInfoParser whoisInfoParser = new WhoisInfoParser();
         CapParser capParser = new CapParser();
+        NickNameInUseParser nickNameInUseParser = new NickNameInUseParser();
 
         put(IrcCommand.RESPONSE_MOTD_START, motdParser);
         put(IrcCommand.RESPONSE_MOTD_CONTENT, motdParser);
@@ -41,10 +50,12 @@ public abstract class IrcParser {
         put(IrcCommand.RESPONSE_AUTHENTICATE_ERROR1, capParser);
         put(IrcCommand.RESPONSE_AUTHENTICATE_ERROR2, capParser);
         put(IrcCommand.COMMAND_NICK, new NickParser());
+        put(IrcCommand.ERROR_NICK_IN_USE, nickNameInUseParser);
+        put(IrcCommand.ERROR_NICK_UNAVAILABLE, nickNameInUseParser);
     }};
-    private static String host;
+    private String host;
 
-    public static void parse(@NonNull IrcManager ircManager, @NonNull String rawIrcLine) {
+    public void parse(@NonNull IrcManager ircManager, @NonNull String rawIrcLine) {
         List<String> parsedLine = Utils.tokenizeLine(rawIrcLine);
 
         if (host == null) {
@@ -61,7 +72,7 @@ public abstract class IrcParser {
         IrcCommand ircCommand = IrcCommand.getIrcCommandFromCommandString(command);
 
         if (commandParsers.containsKey(ircCommand)) {
-            IrcParser ircParser = commandParsers.get(ircCommand);
+            Parser ircParser = commandParsers.get(ircCommand);
             Handler handler = ircParser.parse(ircManager, parserToken);
 
             if (handler != null) {
@@ -73,6 +84,4 @@ public abstract class IrcParser {
             }
         }
     }
-
-    public abstract Handler parse(IrcManager ircManager, ParserToken parserToken);
 }

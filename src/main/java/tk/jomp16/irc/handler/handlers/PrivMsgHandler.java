@@ -1,10 +1,17 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.handler.handlers;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import tk.jomp16.irc.IrcManager;
 import tk.jomp16.irc.channel.Channel;
@@ -13,7 +20,6 @@ import tk.jomp16.irc.listener.listeners.CommandListener;
 import tk.jomp16.irc.listener.listeners.PrivMsgListener;
 import tk.jomp16.irc.parser.Source;
 import tk.jomp16.irc.user.User;
-import tk.jomp16.plugin.PluginInfo;
 import tk.jomp16.plugin.command.Command;
 import tk.jomp16.plugin.command.Commands;
 import tk.jomp16.plugin.event.Event;
@@ -31,10 +37,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Log4j2
 public class PrivMsgHandler implements Handler {
-    @Getter
-    @Setter
-    private static IrcManager ircManager;
     private static List<EventRegister> eventRegisters = new ArrayList<>();
+    private final IrcManager ircManager;
     private final User user;
     private final Channel channel;
     private final String message;
@@ -48,8 +52,7 @@ public class PrivMsgHandler implements Handler {
             if (annotation != null) {
                 method.setAccessible(true);
                 Command command = (Command) annotation;
-                PluginInfo pluginInfo = ircManager.getPluginInfoHashMap().get(event.getClass().getSimpleName());
-                EventRegister eventRegister = new EventRegister(command.value(), command.optCommands(), command.args(), method, event, command.level(), pluginInfo);
+                EventRegister eventRegister = new EventRegister(command.value(), command.optCommands(), command.args(), method, event, command.level());
                 eventRegisters.add(eventRegister);
                 Commands.addCommand(eventRegister);
             }
@@ -69,7 +72,7 @@ public class PrivMsgHandler implements Handler {
 
         Runnable runnable = () -> ircManager.getEvents().forEach((event) -> {
             try {
-                PrivMsgListener privMsgListener = new PrivMsgListener(ircManager, user, channel, event, ircManager.getPluginInfoFromEvent(event));
+                PrivMsgListener privMsgListener = new PrivMsgListener(ircManager, user, channel, event);
                 privMsgListener.setMessage(message);
                 privMsgListener.setArgs(new ArrayList<>(args));
                 event.onPrivMsg(privMsgListener);
@@ -129,7 +132,7 @@ public class PrivMsgHandler implements Handler {
                     }
 
                     OptionSet optionSet = parser.parse(args.toArray(new String[args.size()]));
-                    CommandListener commandListener = new CommandListener(ircManager, user, channel, eventRegister.event, eventRegister.pluginInfo);
+                    CommandListener commandListener = new CommandListener(ircManager, user, channel, eventRegister.event);
                     commandListener.setMessage(messageWithoutCommand);
                     commandListener.setArgs(args);
                     commandListener.setCommand(command);
@@ -200,6 +203,5 @@ public class PrivMsgHandler implements Handler {
         public final Method method;
         public final Event event;
         public final Level level;
-        public final PluginInfo pluginInfo;
     }
 }

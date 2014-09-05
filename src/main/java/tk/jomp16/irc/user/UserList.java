@@ -1,6 +1,14 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.user;
 
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import tk.jomp16.irc.IrcManager;
@@ -10,13 +18,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Log4j2
+@RequiredArgsConstructor
 public class UserList {
-    private static Map<String, User> userMap = new HashMap<>();
-    @Setter
-    private static IrcManager ircManager;
+    private final IrcManager ircManager;
+    private Map<String, User> userMap = new HashMap<>();
 
     @Synchronized
-    public static User getUserFromNick(String nick) {
+    public User getUserFromNick(String nick) {
         if (userMap.containsKey(nick)) {
             return userMap.get(nick);
         } else {
@@ -29,21 +37,21 @@ public class UserList {
     }
 
     @Synchronized
-    public static void changeNickFromNick(String oldNick, String newNick) {
+    public void changeNickFromNick(String oldNick, String newNick) {
         User user = getUserFromNick(oldNick);
 
         user.setNickName(newNick);
     }
 
     @Synchronized
-    public static void changeNickFromHost(String host, String newNick) {
+    public void changeNickFromHost(String host, String newNick) {
         User user = getUserFromHost(host);
 
         user.setNickName(newNick);
     }
 
     @Synchronized
-    public static void setHost(String userNick, String host) {
+    public void setHost(String userNick, String host) {
         Source source = new Source(host);
 
         User user = getUserFromNick(userNick);
@@ -53,7 +61,7 @@ public class UserList {
     }
 
     @Synchronized
-    public static void setHost(String host) {
+    public void setHost(String host) {
         Source source = new Source(host);
 
         User user = getUserFromNick(source.getNick());
@@ -63,7 +71,7 @@ public class UserList {
     }
 
     @Synchronized
-    public static User getUserFromHost(String host) {
+    public User getUserFromHost(String host) {
         for (User user : userMap.values()) {
             if (user.getCompleteRawLine().equals(host)) {
                 return user;
@@ -79,12 +87,12 @@ public class UserList {
     }
 
     @Synchronized
-    public static void setRealName(String nick, String realName) {
+    public void setRealName(String nick, String realName) {
         User user = getUserFromNick(nick);
         user.setRealName(realName);
     }
 
-    public static void removeUser(User user) {
+    public void removeUser(User user) {
         userMap.remove(user.getNickName());
     }
 }

@@ -1,3 +1,13 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
+
+
 apply plugin: 'java'
 apply plugin: 'idea'
 
@@ -17,6 +27,17 @@ dependencies {
     compile 'org.javassist:javassist:+'
     compile 'org.reflections:reflections:+'
 }
+
+task copyConfig(type: Copy) {
+    File f = new File('out/config.json')
+
+    if (!f.exists()) {
+        from 'config.json'
+        into 'out'
+    }
+}
+
+jar.dependsOn copyConfig
 
 idea {
     module {
@@ -42,13 +63,6 @@ allprojects {
     clean {
         delete 'out'
     }
-
-    task copyConfig(type: Copy) {
-        from 'config.json'
-        into 'out'
-    }
-
-    jar.dependsOn copyConfig
 
     jar {
         project.gradle.projectsEvaluated {

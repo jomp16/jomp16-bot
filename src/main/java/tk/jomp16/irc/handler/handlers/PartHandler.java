@@ -1,3 +1,11 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.handler.handlers;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +28,7 @@ public class PartHandler implements Handler {
     public void respond() {
         Runnable runnable = () -> ircManager.getEvents().forEach((event) -> {
             try {
-                PartListener partListener = new PartListener(ircManager, user, channel, event, ircManager.getPluginInfoFromEvent(event));
+                PartListener partListener = new PartListener(ircManager, user, channel, event);
                 partListener.setReason(reason);
 
                 event.onPart(partListener);

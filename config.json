@@ -1,23 +1,25 @@
-{
-    "nick": "placeholder nick",
-    "ident": "placeholder ident",
-    "real_name": "placeholder real name",
-    "server": "placeholder IRC server",
-    "sasl": false,
-    "sasl_user": "placeholder",
-    "password": "placeholder",
-    "port": 6667,
-    "prefix": "*",
-    "channels": [
-        "#placeholder channel"
-    ],
-    "owners": [
-        "*!*@unaffiliated/placeholder user"
-    ],
-    "admins": [
-        "*!*@unaffiliated/placeholder user"
-    ],
-    "mods": [
-        "*!*@unaffiliated/placeholder user"
-    ]
-}
+[
+    {
+        "nick": "placeholder nick",
+        "ident": "placeholder ident",
+        "real_name": "placeholder real name",
+        "server": "placeholder IRC server",
+        "sasl": false,
+        "sasl_user": "placeholder",
+        "password": "placeholder",
+        "port": 6667,
+        "prefix": "*",
+        "channels": [
+            "#placeholder channel"
+        ],
+        "owners": [
+            "*!*@unaffiliated/placeholder user"
+        ],
+        "admins": [
+            "*!*@unaffiliated/placeholder user"
+        ],
+        "mods": [
+            "*!*@unaffiliated/placeholder user"
+        ]
+    }
+]

@@ -1,3 +1,11 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.configuration;
 
 import com.google.gson.annotations.SerializedName;
@@ -15,12 +23,10 @@ public class Configuration {
     @Setter
     private String nick;
     private String ident;
-    @SerializedName("real_name")
     private String realName;
     private String server;
     private int port = 6667;
     private boolean sasl;
-    @SerializedName("sasl_user")
     private String saslUser;
     private String password;
     private String prefix;
@@ -30,19 +36,19 @@ public class Configuration {
     private List<String> mods;
 
     public Configuration(Builder builder) {
-        this.nick = builder.nick;
-        this.ident = builder.ident;
-        this.realName = builder.realName;
-        this.server = builder.server;
-        this.port = builder.port;
-        this.sasl = builder.sasl;
-        this.saslUser = builder.saslUser;
-        this.password = builder.password;
-        this.prefix = builder.prefix;
-        this.channels = builder.channels;
-        this.owners = builder.owners;
-        this.admins = builder.admins;
-        this.mods = builder.mods;
+        this.nick = builder.nick();
+        this.ident = builder.ident();
+        this.realName = builder.realName();
+        this.server = builder.server();
+        this.port = builder.port();
+        this.sasl = builder.sasl();
+        this.saslUser = builder.saslUser();
+        this.password = builder.password();
+        this.prefix = builder.prefix();
+        this.channels = builder.channels();
+        this.owners = builder.owners();
+        this.admins = builder.admins();
+        this.mods = builder.mods();
     }
 
     public static Builder builder() {
@@ -51,13 +57,16 @@ public class Configuration {
 
     @Accessors(chain = true, fluent = true)
     @Setter
+    @Getter
     @ToString
     public static class Builder {
         private String nick = "jomp16-bot";
         private String ident = "jomp16-bot";
+        @SerializedName("real_name")
         private String realName = "jomp16-bot";
         private String server = "irc.freenode.org";
         private boolean sasl = false;
+        @SerializedName("sasl_user")
         private String saslUser = "placeholder";
         private String password = "placeholder";
         private String prefix = "*";

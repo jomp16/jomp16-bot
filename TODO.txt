@@ -1,3 +1,17 @@
+-----------------------------------------------------------------------
+
+CTCP
+
+DCC
+
+client > bot - done
+bot > client - WIP
+
+DCC CHAT - is really needed?
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
 [DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :cameron.freenode.net 332 jomp16-bot #wekeden :Welcome to the official IRC channel of http://wekeden.net/ | Visit our official Murmur server: 199.58.85.76:20942 | http://bash.org/?244321 |  http://reddit.com/r/Meritism/ | Meritism docs: http://docs.wekeden.net/
 [DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :cameron.freenode.net 333 jomp16-bot #wekeden waratte 1404515213
 [DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :cameron.freenode.net 353 jomp16-bot @ #wekeden :jomp16-bot +jomp16 +hbgreg_otg @ChanServ @Ysmir +Jiangyi +nebkat @waratte

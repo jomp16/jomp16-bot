@@ -1,3 +1,11 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.plugin;
 
 import com.google.gson.Gson;
@@ -22,6 +30,7 @@ import java.util.stream.Collectors;
 @Log4j2
 @Getter
 public class PluginManager extends Event {
+    private static boolean alreadyLoaded = false;
     private IrcManager ircManager;
     private List<Plugin> plugins = new ArrayList<>();
     private Gson gson;
@@ -43,22 +52,26 @@ public class PluginManager extends Event {
 
     @SuppressWarnings("ConstantConditions")
     public void loadAll() throws Exception {
-        File pluginDirectory = new File("plugins");
+        if (!alreadyLoaded) {
+            alreadyLoaded = true;
 
-        for (File pluginFile : pluginDirectory.listFiles()) {
-            if (pluginFile.getName().endsWith(".jar")) {
-                JarFile jarFile = new JarFile(pluginFile);
-                JarEntry entry = jarFile.getJarEntry("plugin.json");
+            File pluginDirectory = new File("plugins");
 
-                if (entry != null) {
-                    PluginLoader.PluginRegister pluginRegister = pluginLoader.loadPlugin(pluginFile);
-                    PluginInfo pluginInfo = gson.fromJson(new InputStreamReader(pluginRegister.getUrlClassLoader().getResourceAsStream("plugin.json")), PluginInfo.class);
+            for (File pluginFile : pluginDirectory.listFiles()) {
+                if (pluginFile.getName().endsWith(".jar")) {
+                    JarFile jarFile = new JarFile(pluginFile);
+                    JarEntry entry = jarFile.getJarEntry("plugin.json");
 
-                    Plugin plugin = new Plugin(pluginInfo, DigestUtils.md5Hex(new FileInputStream(pluginFile)), pluginRegister.getEvents(), pluginRegister.getUrlClassLoader());
+                    if (entry != null) {
+                        PluginLoader.PluginRegister pluginRegister = pluginLoader.loadPlugin(pluginFile);
+                        PluginInfo pluginInfo = gson.fromJson(new InputStreamReader(pluginRegister.getUrlClassLoader().getResourceAsStream("plugin.json")), PluginInfo.class);
 
-                    plugins.add(plugin);
+                        Plugin plugin = new Plugin(pluginInfo, DigestUtils.md5Hex(new FileInputStream(pluginFile)), pluginRegister.getEvents(), pluginRegister.getUrlClassLoader());
 
-                    ircManager.registerPlugin(plugin);
+                        plugins.add(plugin);
+
+                        ircManager.registerPlugin(plugin);
+                    }
                 }
             }
         }
@@ -125,7 +138,27 @@ public class PluginManager extends Event {
      * @throws Exception
      */
     public int reload(String pluginName) throws Exception {
-        File pluginFile = new File("plugins/" + pluginName + ".jar");
+        // todo: 
+        /* java.lang.reflect.InvocationTargetException
+                at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_11]
+                at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_11]
+                at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_11]
+                at java.lang.reflect.Method.invoke(Method.java:483) ~[?:1.8.0_11]
+                at tk.jomp16.irc.handler.handlers.PrivMsgHandler.invoke(PrivMsgHandler.java:171) [jomp16-bot-0.1.jar:0.1]
+                at tk.jomp16.irc.handler.handlers.PrivMsgHandler.invoke(PrivMsgHandler.java:160) [jomp16-bot-0.1.jar:0.1]
+                at tk.jomp16.irc.handler.handlers.PrivMsgHandler.lambda$respond$39(PrivMsgHandler.java:82) [jomp16-bot-0.1.jar:0.1]
+                at tk.jomp16.irc.handler.handlers.PrivMsgHandler$$Lambda$15/2008916272.run(Unknown Source) [jomp16-bot-0.1.jar:0.1]
+                at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [?:1.8.0_11]
+                at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [?:1.8.0_11]
+                at java.lang.Thread.run(Thread.java:745) [?:1.8.0_11]
+            Caused by: java.lang.NullPointerException
+                at java.io.Reader.<init>(Reader.java:78) ~[?:1.8.0_11]
+                at java.io.InputStreamReader.<init>(InputStreamReader.java:72) ~[?:1.8.0_11]
+                at tk.jomp16.plugin.PluginManager.reload(PluginManager.java:136) ~[jomp16-bot-0.1.jar:0.1]
+                at tk.jomp16.plugin.PluginManager.plugin(PluginManager.java:187) ~[jomp16-bot-0.1.jar:0.1]
+                ... 11 more */
+
+        /* File pluginFile = new File("plugins/" + pluginName + ".jar");
 
         if (pluginFile.exists()) {
             JarFile jarFile = new JarFile(pluginFile);
@@ -152,6 +185,26 @@ public class PluginManager extends Event {
                     plugin.getUrlClassLoader().close();
 
                     return 2;
+                }
+            }
+        }
+
+        return 1; */
+
+        File pluginFile = new File("plugins/" + pluginName + ".jar");
+
+        if (pluginFile.exists()) {
+            String md5 = DigestUtils.md5Hex(new FileInputStream(pluginFile));
+            String tmp = pluginName.substring(0, pluginName.indexOf('-'));
+
+            if (plugins.parallelStream().filter(plugin -> plugin.getPluginInfo().getName().equals(tmp)).count() != 0 &&
+                    plugins.parallelStream().filter(plugin1 -> plugin1.getMd5sums().equals(md5)).count() == 0) {
+                int tmp1 = unload(pluginName.substring(0, pluginName.indexOf('-')));
+
+                if (tmp1 == 0) {
+                    return load(pluginName);
+                } else {
+                    return tmp1;
                 }
             }
         }

@@ -1,7 +1,16 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.channel;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import tk.jomp16.irc.IrcManager;
 import tk.jomp16.irc.user.User;
 
@@ -11,9 +20,11 @@ import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
+@ToString
 public class Channel {
     private final IrcManager ircManager;
     private final String targetName;
+
 
     public ChannelActions getChannelActions() {
         if (targetName.startsWith("#")) {
@@ -25,7 +36,7 @@ public class Channel {
 
     public Map<User, ChannelLevel> getAllUsersWithLevel() {
         if (targetName.startsWith("#")) {
-            return ChannelList.getListUsers(targetName);
+            return ircManager.getChannelList().getListUsers(targetName);
         }
 
         return null;
@@ -33,7 +44,7 @@ public class Channel {
 
     public List<User> getAllUsers() {
         if (targetName.startsWith("#")) {
-            return new ArrayList<>(ChannelList.getListUsers(targetName).keySet());
+            return new ArrayList<>(ircManager.getChannelList().getListUsers(targetName).keySet());
         }
 
         return null;
@@ -43,7 +54,7 @@ public class Channel {
         if (targetName.startsWith("#")) {
             List<User> opUsers = new ArrayList<>();
 
-            ChannelList.getListUsers(targetName).forEach((user, level) -> {
+            ircManager.getChannelList().getListUsers(targetName).forEach((user, level) -> {
                 if (level.equals(ChannelLevel.OP)) {
                     opUsers.add(user);
                 }
@@ -59,7 +70,7 @@ public class Channel {
         if (targetName.startsWith("#")) {
             List<User> voiceUsers = new ArrayList<>();
 
-            ChannelList.getListUsers(targetName).forEach((user, level) -> {
+            ircManager.getChannelList().getListUsers(targetName).forEach((user, level) -> {
                 if (level.equals(ChannelLevel.VOICE)) {
                     voiceUsers.add(user);
                 }
@@ -75,7 +86,7 @@ public class Channel {
         if (targetName.startsWith("#")) {
             List<User> normalUsers = new ArrayList<>();
 
-            ChannelList.getListUsers(targetName).forEach((user, level) -> {
+            ircManager.getChannelList().getListUsers(targetName).forEach((user, level) -> {
                 if (level.equals(ChannelLevel.NORMAL)) {
                     normalUsers.add(user);
                 }
@@ -89,7 +100,7 @@ public class Channel {
 
     public String getChannelTopic() {
         if (targetName.startsWith("#")) {
-            return ChannelList.getChannelTopic(this.targetName);
+            return ircManager.getChannelList().getChannelTopic(this.targetName);
         }
 
         return null;
@@ -97,7 +108,7 @@ public class Channel {
 
     public ChannelInfo getChannelInfo() {
         if (targetName.startsWith("#")) {
-            return ChannelList.getChannelInfo(targetName);
+            return ircManager.getChannelList().getChannelInfo(targetName);
         }
 
         return null;

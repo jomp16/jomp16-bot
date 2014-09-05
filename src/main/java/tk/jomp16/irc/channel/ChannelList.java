@@ -1,7 +1,17 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.channel;
 
 import com.google.common.collect.HashMultimap;
+import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import tk.jomp16.irc.IrcManager;
 import tk.jomp16.irc.modes.Mode;
 import tk.jomp16.irc.user.User;
 
@@ -10,12 +20,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class ChannelList {
-    private static HashMultimap<String, ChannelUser> hashMapChannelUsers = HashMultimap.create();
-    private static Map<String, ChannelInfo> channelInfo = new HashMap<>();
+    private final IrcManager ircManager;
+    private HashMultimap<String, ChannelUser> hashMapChannelUsers = HashMultimap.create();
+    private Map<String, ChannelInfo> channelInfo = new HashMap<>();
 
     @Synchronized
-    public static void setTopic(String channel, String topic) {
+    public void setTopic(String channel, String topic) {
         if (channelInfo.containsKey(channel)) {
             channelInfo.get(channel).setTopic(topic);
         } else {
@@ -24,7 +36,7 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static void setBy(String channel, String setByUser, LocalDateTime localDateTime) {
+    public void setBy(String channel, String setByUser, LocalDateTime localDateTime) {
         if (channelInfo.containsKey(channel)) {
             channelInfo.get(channel).setTopicSetBy(setByUser);
             channelInfo.get(channel).setTopicSetAt(localDateTime);
@@ -34,7 +46,7 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static String getChannelTopic(String channel) {
+    public String getChannelTopic(String channel) {
         if (channelInfo.containsKey(channel)) {
             return channelInfo.get(channel).getTopic();
         }
@@ -43,7 +55,7 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static ChannelInfo getChannelInfo(String channel) {
+    public ChannelInfo getChannelInfo(String channel) {
         if (channelInfo.containsKey(channel)) {
             return channelInfo.get(channel);
         }
@@ -52,14 +64,14 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static void addUserToChannel(String channel, User user, ChannelLevel level) {
+    public void addUserToChannel(String channel, User user, ChannelLevel level) {
         ChannelUser channelUser = new ChannelUser(user, level);
 
         hashMapChannelUsers.put(channel, channelUser);
     }
 
     @Synchronized
-    public static void removeUserFromChannel(String channel, User user) {
+    public void removeUserFromChannel(String channel, User user) {
         if (hashMapChannelUsers.containsKey(channel)) {
             for (Iterator<ChannelUser> iterator = hashMapChannelUsers.get(channel).iterator(); iterator.hasNext(); ) {
                 ChannelUser channelUser = iterator.next();
@@ -74,7 +86,7 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static void removeUserFromAllChannel(User user) {
+    public void removeUserFromAllChannel(User user) {
         for (Iterator<ChannelUser> iterator = hashMapChannelUsers.values().iterator(); iterator.hasNext(); ) {
             ChannelUser channelUser = iterator.next();
 
@@ -85,7 +97,7 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static void changeNick(String oldNick, String newNick) {
+    public void changeNick(String oldNick, String newNick) {
         HashMultimap<String, ChannelUser> tmp = HashMultimap.create();
 
         for (String s : hashMapChannelUsers.keySet()) {
@@ -103,7 +115,7 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static void changeUserLevel(String channel, String nick, Mode mode) {
+    public void changeUserLevel(String channel, String nick, Mode mode) {
         if (hashMapChannelUsers.containsKey(channel)) {
             ChannelUser channelUser1 = null;
 
@@ -138,7 +150,7 @@ public class ChannelList {
     }
 
     @Synchronized
-    public static Map<User, ChannelLevel> getListUsers(String channel) {
+    public Map<User, ChannelLevel> getListUsers(String channel) {
         Map<User, ChannelLevel> tmp = new HashMap<>();
 
         hashMapChannelUsers.entries().stream().filter(entry -> entry.getKey().equals(channel)).forEach(entry -> {

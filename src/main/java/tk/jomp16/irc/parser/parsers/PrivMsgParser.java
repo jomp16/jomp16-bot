@@ -1,22 +1,31 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.parser.parsers;
 
 import tk.jomp16.irc.IrcManager;
 import tk.jomp16.irc.channel.Channel;
 import tk.jomp16.irc.handler.Handler;
 import tk.jomp16.irc.handler.handlers.PrivMsgHandler;
-import tk.jomp16.irc.parser.IrcParser;
+import tk.jomp16.irc.parser.Parser;
 import tk.jomp16.irc.parser.ParserToken;
 import tk.jomp16.irc.user.User;
-import tk.jomp16.irc.user.UserList;
 
-public class PrivMsgParser extends IrcParser {
+public class PrivMsgParser implements Parser {
+    private CtcpParser ctcpParser = new CtcpParser();
+
     @Override
     public Handler parse(IrcManager ircManager, ParserToken parserToken) {
         if (parserToken.getSource().getNick().equals(ircManager.getConfiguration().getNick())) {
             return null;
         }
 
-        User user = UserList.getUserFromHost(parserToken.getSource().getRawSource());
+        User user = ircManager.getUserList().getUserFromHost(parserToken.getSource().getRawSource());
 
         Channel channel;
 
@@ -31,8 +40,9 @@ public class PrivMsgParser extends IrcParser {
 
         if (message.startsWith("\001")) {
             // todo: CTCP
+            return ctcpParser.parse(ircManager, parserToken);
         }
 
-        return new PrivMsgHandler(user, channel, message);
+        return new PrivMsgHandler(ircManager, user, channel, message);
     }
 }

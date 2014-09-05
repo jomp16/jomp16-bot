@@ -1,3 +1,11 @@
+/*
+ * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
+
 package tk.jomp16.irc.listener;
 
 import lombok.Getter;
@@ -23,7 +31,6 @@ public class Listener {
     protected final User user;
     protected final Channel channel;
     protected final Event event;
-    protected final PluginInfo pluginInfo;
 
     @Synchronized
     public synchronized void respond(Object message) {
@@ -116,8 +123,12 @@ public class Listener {
         return f;
     }
 
+    public PluginInfo getPluginInfo() {
+        return ircManager.getPluginInfoFromEvent(event);
+    }
+
     public File getPluginPath(String addPath) {
-        if (pluginInfo != null) {
+        if (getPluginInfo() != null) {
             File f = new File(getPluginPath(), addPath);
 
             if (!f.exists()) {
@@ -131,8 +142,8 @@ public class Listener {
     }
 
     public File getPluginPath() {
-        if (pluginInfo != null) {
-            File f = new File("plugins/data/" + pluginInfo.getName());
+        if (getPluginInfo() != null) {
+            File f = new File("plugins/data/" + getPluginInfo().getName());
 
             if (!f.exists()) {
                 f.mkdirs();

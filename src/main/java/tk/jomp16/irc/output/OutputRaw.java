@@ -17,8 +17,39 @@ import tk.jomp16.irc.IrcManager;
 public class OutputRaw {
     private final IrcManager ircManager;
 
+    // TODO: REWRITE THIS
     @Synchronized
-    public void writeRaw(@NonNull Object msg) {
+    public void writeRaw(@NonNull String msg) {
         ircManager.getChannelFuture().channel().writeAndFlush(msg);
+    }
+
+    @Synchronized
+    public void writeRaw(@NonNull String prefix, @NonNull String message) {
+        writeRaw(prefix, message, "");
+    }
+
+    @Synchronized
+    public void writeRaw(@NonNull String prefix, @NonNull String message, @NonNull String suffix) {
+        String finalMessage = prefix + message + suffix;
+
+        int realMaxLineLength = 512 - 2;
+
+        if (finalMessage.length() < realMaxLineLength) {
+            //Length is good (or auto split message is false), just go ahead and send it
+            writeRaw(finalMessage);
+            return;
+        }
+
+        // Too long, split it up
+        int maxMessageLength = realMaxLineLength - (prefix + suffix).length();
+
+        // Oh look, no function to split every nth char. Since regex is expensive, use this nonsense
+        int iterations = (int) Math.ceil(message.length() / (double) maxMessageLength);
+
+        for (int i = 0; i < iterations; i++) {
+            int endPoint = (i != iterations - 1) ? ((i + 1) * maxMessageLength) : message.length();
+            String curMessagePart = prefix + message.substring(i * maxMessageLength, endPoint) + suffix;
+            writeRaw(curMessagePart);
+        }
     }
 }

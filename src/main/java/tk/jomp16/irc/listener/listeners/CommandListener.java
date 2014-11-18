@@ -62,11 +62,5 @@ public class CommandListener extends Listener {
                 }
             }
         }
-
-        try {
-            wait(700);
-        } catch (Exception e) {
-            log.error(e, e);
-        }
     }
 }

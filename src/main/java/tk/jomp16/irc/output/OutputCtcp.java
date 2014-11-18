@@ -19,27 +19,27 @@ public class OutputCtcp {
     private final IrcManager ircManager;
 
     @Synchronized
-    public void sendAction(Object target, Object action) {
-        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :\001ACTION " + action + "\001");
+    public void sendAction(String target, String action) {
+        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :\001", "ACTION " + action, "\001");
     }
 
     @Synchronized
-    public void sendTime(Object target) {
+    public void sendTime(String target) {
         ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :\001TIME\001");
     }
 
     @Synchronized
-    public void sendResponsePrivMsgEvent(Object target, Object response) {
-        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :\001" + response + "\001");
+    public void sendResponsePrivMsgEvent(String target, String response) {
+        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :\001", response, "\001");
     }
 
     @Synchronized
-    public void sendResponseNotice(Object target, Object response) {
-        ircManager.getOutputRaw().writeRaw("NOTICE " + target + " :\001" + response + "\001");
+    public void sendResponseNotice(String target, String response) {
+        ircManager.getOutputRaw().writeRaw("NOTICE " + target + " :\001", response, "\001");
     }
 
     @Synchronized
-    public void sendFile(Object target, File f) throws Exception {
+    public void sendFile(String target, File f) throws Exception {
 
     }
 }

@@ -1,3 +1,5 @@
+Rewrite and improve DCC
+
 -----------------------------------------------------------------------
 
 CTCP
@@ -32,16 +34,6 @@ public class Teste {
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
 
-Adicionar copyright WTFPL
-
------------------------------------------------------------------------
------------------------------------------------------------------------
-
-Cachear "User"
-
------------------------------------------------------------------------
------------------------------------------------------------------------
-
 WHOIS!
 
 [DEBUG] --> (tk.jomp16.irc.netty.NettyEncoder) -> WHOIS jomp16
@@ -54,7 +46,7 @@ WHOIS!
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
 
-# ChanServ info #jomp16
+# ChanServ info #jomp16-bot
 
 [DEBUG] --> (tk.jomp16.irc.netty.NettyEncoder) -> PRIVMSG ChanServ :info #jomp16-bot
 [DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :ChanServ!ChanServ@services. NOTICE jomp16-bot :Information on #jomp16-bot:
@@ -75,5 +67,5 @@ CTCP/DCC
 # DCC SEND
 [DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :jomp16!~jomp16@unaffiliated/jomp16 PRIVMSG jomp16-bot :DCC SEND boot-r209.img 0 58864 8747008
 
-# USELESS THING, send my XChat
+# USELESS THING, send by XChat
 [DEBUG] --> (tk.jomp16.irc.netty.NettyDecoder) -> :jomp16!~jomp16@unaffiliated/jomp16 PRIVMSG jomp16-bot :SHA-256 checksum for boot-r209.img (remote): 07a605e2b1e047dd3c01db18febe5f6a0c539070b76af84538c6de169745accb

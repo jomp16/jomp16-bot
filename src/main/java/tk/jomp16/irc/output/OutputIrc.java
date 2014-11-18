@@ -16,48 +16,48 @@ import tk.jomp16.irc.IrcManager;
 public class OutputIrc {
     private final IrcManager ircManager;
 
-    public void joinChannel(@NonNull Object channel) {
+    public void joinChannel(@NonNull String channel) {
         ircManager.getOutputRaw().writeRaw("JOIN " + channel);
     }
 
-    public void joinChannel(@NonNull Object channel, @NonNull Object password) {
+    public void joinChannel(@NonNull String channel, @NonNull String password) {
         ircManager.getOutputRaw().writeRaw("JOIN " + channel + " " + password);
     }
 
-    public void partChannel(@NonNull Object channel) {
+    public void partChannel(@NonNull String channel) {
         ircManager.getOutputRaw().writeRaw("PART " + channel);
     }
 
-    public void partChannel(@NonNull Object channel, @NonNull Object reason) {
+    public void partChannel(@NonNull String channel, @NonNull String reason) {
         ircManager.getOutputRaw().writeRaw("PART " + channel + " :" + reason);
     }
 
-    public void giveOP(@NonNull Object channel, @NonNull Object user) {
+    public void giveOP(@NonNull String channel, @NonNull String user) {
         ircManager.getOutputRaw().writeRaw("MODE " + channel + " +o " + user);
     }
 
-    public void giveVoice(@NonNull Object channel, @NonNull Object user) {
+    public void giveVoice(@NonNull String channel, @NonNull String user) {
         ircManager.getOutputRaw().writeRaw("MODE " + channel + " +v " + user);
     }
 
-    public void removeOP(@NonNull Object channel, @NonNull Object user) {
+    public void removeOP(@NonNull String channel, @NonNull String user) {
         ircManager.getOutputRaw().writeRaw("MODE " + channel + " -o " + user);
     }
 
-    public void removeVoice(@NonNull Object channel, @NonNull Object user) {
+    public void removeVoice(@NonNull String channel, @NonNull String user) {
         ircManager.getOutputRaw().writeRaw("MODE " + channel + " -v " + user);
     }
 
-    public void sendPrivMsg(@NonNull Object target, @NonNull Object message) {
-        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :" + message);
+    public void sendPrivMsg(@NonNull String target, @NonNull String message) {
+        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :", message);
     }
 
-    public void sendPrivMsg(@NonNull Object target, @NonNull Object username, @NonNull Object message) {
-        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :" + username + ": " + message);
+    public void sendPrivMsg(@NonNull String target, @NonNull String username, @NonNull String message) {
+        ircManager.getOutputRaw().writeRaw("PRIVMSG " + target + " :" + username + ": ", message);
     }
 
-    public void sendNotice(@NonNull Object target, @NonNull Object message) {
-        ircManager.getOutputRaw().writeRaw("NOTICE " + target + " :" + message);
+    public void sendNotice(@NonNull String target, @NonNull String message) {
+        ircManager.getOutputRaw().writeRaw("NOTICE " + target + " :", message);
     }
 
     public void changeNick(String nick) {
@@ -65,7 +65,7 @@ public class OutputIrc {
         ircManager.getOutputRaw().writeRaw("NICK " + nick);
     }
 
-    public void sendWhois(Object user) {
+    public void sendWhois(String user) {
         ircManager.getOutputRaw().writeRaw("WHOIS " + user);
     }
 

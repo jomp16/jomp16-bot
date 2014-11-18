@@ -15,7 +15,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="jomp16-bot" exported="" />
-    <orderEntry type="library" exported="" name="Gradle: org.jsoup:jsoup:1.7.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.jsoup:jsoup:1.8.1" level="project" />
   </component>
 </module>
-

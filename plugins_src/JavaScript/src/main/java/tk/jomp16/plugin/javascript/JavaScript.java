@@ -39,12 +39,11 @@ public class JavaScript extends Event {
 
             if (commandListener.getOptionSet().has("url")) {
                 try {
-                    Object object = scriptEngine.eval(new InputStreamReader(
-                            new URL((String) commandListener.getOptionSet().valueOf("url")).openStream()));
+                    String jsOutput = String.valueOf(scriptEngine.eval(new InputStreamReader(new URL((String) commandListener.getOptionSet().valueOf("url")).openStream())));
 
-                    if (object != null) {
-                        if (!object.equals("null")) {
-                            commandListener.respond(object, false);
+                    if (jsOutput != null) {
+                        if (!jsOutput.equals("null")) {
+                            commandListener.respond(jsOutput, false);
                         }
                     }
                 } catch (Exception e) {
@@ -52,11 +51,11 @@ public class JavaScript extends Event {
                 }
             } else {
                 try {
-                    Object object = scriptEngine.eval(commandListener.getMessage());
+                    String jsOutput = String.valueOf(scriptEngine.eval(commandListener.getMessage()));
 
-                    if (object != null) {
-                        if (!object.equals("null")) {
-                            commandListener.respond(object, false);
+                    if (jsOutput != null) {
+                        if (!jsOutput.equals("null")) {
+                            commandListener.respond(jsOutput, false);
                         }
                     }
                 } catch (Exception e) {

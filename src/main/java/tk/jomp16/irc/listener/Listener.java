@@ -33,62 +33,46 @@ public class Listener {
     protected final Event event;
 
     @Synchronized
-    public synchronized void respond(Object message) {
+    public void respond(String message) {
         ircManager.getOutputIrc().sendPrivMsg(channel.getTargetName(), user.getNickName(), message);
-
-        try {
-            wait(700);
-        } catch (Exception e) {
-            log.error("An error happened in Listener!", e);
-        }
     }
 
     @Synchronized
-    public synchronized void respond(Object message, boolean showName) {
+    public void respond(String message, boolean showName) {
         if (showName) {
             respond(message);
         } else {
             ircManager.getOutputIrc().sendPrivMsg(channel.getTargetName(), message);
         }
-
-        try {
-            wait(700);
-        } catch (Exception e) {
-            log.error("An error happened in Listener!", e);
-        }
     }
 
     @Synchronized
-    public synchronized void respond(Object target, Object message) {
-        ircManager.getOutputIrc().sendPrivMsg(target, message);
-
-        try {
-            wait(700);
-        } catch (Exception e) {
-            log.error("An error happened in Listener!", e);
-        }
+    public void respond(String target, String message) {
+        respond(target, message, false);
     }
 
     @Synchronized
-    public synchronized void respond(Object target, Object user, Object message) {
+    public void respond(String target, String user, String message) {
         ircManager.getOutputIrc().sendPrivMsg(target, user, message);
+    }
 
-        try {
-            wait(700);
-        } catch (Exception e) {
-            log.error("An error happened in Listener!", e);
+    @Synchronized
+    public void respond(String target, String message, boolean pingUser) {
+        if (pingUser) {
+            ircManager.getOutputIrc().sendPrivMsg(channel.getTargetName(), target, message);
+        } else {
+            ircManager.getOutputIrc().sendPrivMsg(target, message);
         }
     }
 
     @Synchronized
-    public synchronized void respond(String user, Object message) {
-        ircManager.getOutputIrc().sendPrivMsg(channel.getTargetName(), user, message);
+    public void notice(String message) {
+        ircManager.getOutputIrc().sendNotice(user.getNickName(), message);
+    }
 
-        try {
-            wait(700);
-        } catch (Exception e) {
-            log.error("An error happened in Listener!", e);
-        }
+    @Synchronized
+    public void notice(String target, String message) {
+        ircManager.getOutputIrc().sendNotice(target, message);
     }
 
     public LanguageManager getLanguageManager(Event event, String resourcePath) {

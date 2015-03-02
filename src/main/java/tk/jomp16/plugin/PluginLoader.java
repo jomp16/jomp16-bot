@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -10,15 +10,15 @@ package tk.jomp16.plugin;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.magicwerk.brownies.collections.GapList;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
-import tk.jomp16.plugin.event.Event;
+import tk.jomp16.plugin.event.PluginEvent;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,23 +26,23 @@ import java.util.Set;
 public class PluginLoader {
     public PluginRegister loadPlugin(File pluginFile) throws Exception {
         if (pluginFile.getName().endsWith(".jar")) {
-            List<Event> events = new ArrayList<>();
+            List<PluginEvent> pluginEvents = new GapList<>();
 
             URL[] urls = new URL[]{pluginFile.toURI().toURL()};
             URLClassLoader urlClassLoader = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
 
             Reflections reflections = new Reflections(new ConfigurationBuilder().addUrls(new URL("file:" + pluginFile.getPath())).addClassLoader(urlClassLoader));
-            Set<Class<? extends Event>> eventsClasses = reflections.getSubTypesOf(Event.class);
+            Set<Class<? extends PluginEvent>> eventsClasses = reflections.getSubTypesOf(PluginEvent.class);
 
-            for (Class<? extends Event> eventClass : eventsClasses) {
-                Constructor<? extends Event> eventConstructor = eventClass.getConstructor();
+            for (Class<? extends PluginEvent> eventClass : eventsClasses) {
+                Constructor<? extends PluginEvent> eventConstructor = eventClass.getConstructor();
 
-                Event event = eventConstructor.newInstance();
+                PluginEvent pluginEvent = eventConstructor.newInstance();
 
-                events.add(event);
+                pluginEvents.add(pluginEvent);
             }
 
-            return new PluginRegister(urlClassLoader, events);
+            return new PluginRegister(urlClassLoader, pluginEvents);
         } else {
             throw new UnsupportedOperationException("File isn't .jar!");
         }
@@ -52,6 +52,6 @@ public class PluginLoader {
     @RequiredArgsConstructor
     public class PluginRegister {
         private final URLClassLoader urlClassLoader;
-        private final List<Event> events;
+        private final List<PluginEvent> pluginEvents;
     }
 }

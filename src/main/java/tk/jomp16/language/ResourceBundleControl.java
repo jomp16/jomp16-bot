@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -11,6 +11,8 @@ package tk.jomp16.language;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.NonNull;
+import org.magicwerk.brownies.collections.GapList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,14 +21,11 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class ResourceBundleControl extends ResourceBundle.Control {
-    private final String CHARSET = "UTF-8";
     private final String FORMAT_JSON = "json";
-    private final List<String> FORMATS = new ArrayList<>();
-    private String CURRENT_ELEMENT;
+    private final List<String> FORMATS = new GapList<>();
     private Gson gson;
 
     public ResourceBundleControl() {
-        FORMATS.addAll(FORMAT_DEFAULT);
         FORMATS.add(FORMAT_JSON);
         gson = new Gson();
     }
@@ -38,10 +37,8 @@ public class ResourceBundleControl extends ResourceBundle.Control {
 
     @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {
-        this.CURRENT_ELEMENT = format;
-
         if (!FORMAT_JSON.equals(format)) {
-            return super.newBundle(baseName, locale, format, loader, reload);
+            return null;
         }
 
         String bundleName = toBundleName(baseName, locale);
@@ -54,6 +51,8 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         }
 
         JsonObject jsonObject;
+
+        String CHARSET = "UTF-8";
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is, CHARSET))) {
             jsonObject = gson.fromJson(br, JsonObject.class);
@@ -68,10 +67,6 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         return rb;
     }
 
-    public boolean isJSON() {
-        return CURRENT_ELEMENT == null || FORMAT_JSON.equals(CURRENT_ELEMENT);
-    }
-
     public Gson getGson() {
         return gson;
     }
@@ -80,12 +75,13 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         private Map<String, JsonElement> data = new HashMap<>();
 
         @Override
+        @NonNull
         public Enumeration<String> getKeys() {
             return Collections.enumeration(data.keySet());
         }
 
         @Override
-        protected Object handleGetObject(String key) {
+        protected Object handleGetObject(@NonNull String key) {
             return data.get(key);
         }
 

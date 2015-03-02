@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -77,7 +77,7 @@ public class IrcParser {
 
             if (handler != null) {
                 try {
-                    handler.respond();
+                    handler.handle();
                 } catch (Exception e) {
                     log.error(e, e);
                 }

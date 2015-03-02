@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -10,17 +10,17 @@ package tk.jomp16.plugin.help;
 
 import org.apache.commons.lang3.StringUtils;
 import tk.jomp16.irc.IrcManager;
-import tk.jomp16.irc.listener.listeners.CommandListener;
-import tk.jomp16.irc.listener.listeners.InitListener;
+import tk.jomp16.irc.event.events.CommandEvent;
+import tk.jomp16.irc.event.events.InitEvent;
 import tk.jomp16.language.LanguageManager;
 import tk.jomp16.plugin.command.Command;
-import tk.jomp16.plugin.event.Event;
+import tk.jomp16.plugin.event.PluginEvent;
 import tk.jomp16.plugin.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Help extends Event {
+public class Help extends PluginEvent {
     private static Map<String, String[]> helpNormal = new HashMap<>();
     private static Map<String, String[]> helpMod = new HashMap<>();
     private static Map<String, String[]> helpAdmin = new HashMap<>();
@@ -28,8 +28,8 @@ public class Help extends Event {
     private static Map<String, HelpRegister> helpRegisters = new HashMap<>();
     private static LanguageManager languageManager;
 
-    public static void addHelp(Event event) {
-        event.getHelpRegister().parallelStream()
+    public static void addHelp(PluginEvent pluginEvent) {
+        pluginEvent.getHelpRegister().parallelStream()
                 .filter(helpRegister -> !helpRegisters.containsKey(helpRegister.getCommand()))
                 .forEach(helpRegister -> {
                     helpRegisters.put(helpRegister.getCommand(), helpRegister);
@@ -57,8 +57,8 @@ public class Help extends Event {
                 });
     }
 
-    public static void removeHelp(Event event) {
-        event.getHelpRegister().parallelStream()
+    public static void removeHelp(PluginEvent pluginEvent) {
+        pluginEvent.getHelpRegister().parallelStream()
                 .filter(helpRegister -> helpRegisters.containsKey(helpRegister.getCommand()))
                 .forEach(helpRegister -> {
                     helpRegisters.remove(helpRegister.getCommand());
@@ -107,12 +107,12 @@ public class Help extends Event {
     }
 
     @Command("help")
-    public void help(CommandListener commandListener) throws Exception {
-        if (commandListener.getArgs().size() > 0) {
-            if (commandListener.getArgs().get(0).equals("all")) {
-                commandListener.respond(languageManager.getAsString("help.text.available.commands", getAllHelp(commandListener.getUser().getLevel())));
+    public void help(CommandEvent commandEvent) throws Exception {
+        if (commandEvent.getArgs().size() > 0) {
+            if (commandEvent.getArgs().get(0).equals("all")) {
+                commandEvent.respond(languageManager.getAsString("help.text.available.commands", getAllHelp(commandEvent.getUser().getLevel())));
             } else {
-                final String[] tmp = {commandListener.getArgs().get(0)};
+                final String[] tmp = {commandEvent.getArgs().get(0)};
 
                 if (helpRegisters.containsKey(tmp[0]) || helpRegisters.values().parallelStream().filter(register -> {
                     if (register.getOptCommands() != null) {
@@ -128,34 +128,34 @@ public class Help extends Event {
                     return false;
                 }).count() != 0) {
                     HelpRegister helpRegister = helpRegisters.get(tmp[0]);
-                    Level level = commandListener.getUser().getLevel();
+                    Level level = commandEvent.getUser().getLevel();
 
                     switch (helpRegister.getLevel()) {
                         case NORMAL:
-                            commandListener.respond(getHelpInfo(commandListener.getIrcManager(), helpRegister));
+                            commandEvent.respond(getHelpInfo(commandEvent.getIrcManager(), helpRegister));
                             break;
                         case MOD:
                             if (level.equals(Level.MOD)) {
-                                commandListener.respond(getHelpInfo(commandListener.getIrcManager(), helpRegister));
+                                commandEvent.respond(getHelpInfo(commandEvent.getIrcManager(), helpRegister));
                             }
                             break;
                         case ADMIN:
                             if (level.equals(Level.ADMIN)) {
-                                commandListener.respond(getHelpInfo(commandListener.getIrcManager(), helpRegister));
+                                commandEvent.respond(getHelpInfo(commandEvent.getIrcManager(), helpRegister));
                             }
                             break;
                         case OWNER:
                             if (level.equals(Level.OWNER)) {
-                                commandListener.respond(getHelpInfo(commandListener.getIrcManager(), helpRegister));
+                                commandEvent.respond(getHelpInfo(commandEvent.getIrcManager(), helpRegister));
                             }
                             break;
                     }
                 } else {
-                    commandListener.respond(languageManager.getAsString("help.text.not.found"));
+                    commandEvent.respond(languageManager.getAsString("help.text.not.found"));
                 }
             }
         } else {
-            commandListener.showUsage("help");
+            commandEvent.showUsage("help");
         }
     }
 
@@ -265,9 +265,9 @@ public class Help extends Event {
     }
 
     @Override
-    public void onInit(InitListener initListener) throws Exception {
+    public void onInit(InitEvent initEvent) throws Exception {
         languageManager = new LanguageManager("lang.Plugins");
 
-        initListener.addHelp(new HelpRegister("help", languageManager.getAsString("help.help.text"), languageManager.getAsString("help.help.usage")));
+        initEvent.addHelp(new HelpRegister("help", languageManager.getAsString("help.help.text"), languageManager.getAsString("help.help.usage")));
     }
 }

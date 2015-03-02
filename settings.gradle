@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -12,6 +12,9 @@ rootProject.name = 'jomp16-bot'
 
 include 'plugins_src/JavaScript'
 include 'plugins_src/Utils'
+include 'plugins_src/Person of Interest'
+
 rootProject.children.find { it.name == 'plugins_src/JavaScript' }.name = 'JavaScript'
 rootProject.children.find { it.name == 'plugins_src/Utils' }.name = 'Utils'
+rootProject.children.find { it.name == 'plugins_src/Person of Interest' }.name = 'Person of Interest'
 

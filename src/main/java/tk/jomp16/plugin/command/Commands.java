@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -10,16 +10,16 @@ package tk.jomp16.plugin.command;
 
 import org.apache.commons.lang3.StringUtils;
 import tk.jomp16.irc.handler.handlers.PrivMsgHandler;
-import tk.jomp16.irc.listener.listeners.CommandListener;
-import tk.jomp16.irc.listener.listeners.InitListener;
+import tk.jomp16.irc.event.events.CommandEvent;
+import tk.jomp16.irc.event.events.InitEvent;
 import tk.jomp16.language.LanguageManager;
-import tk.jomp16.plugin.event.Event;
+import tk.jomp16.plugin.event.PluginEvent;
 import tk.jomp16.plugin.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Commands extends Event {
+public class Commands extends PluginEvent {
     private static Map<String, String[]> commandsNormal = new HashMap<>();
     private static Map<String, String[]> commandsMod = new HashMap<>();
     private static Map<String, String[]> commandsAdmin = new HashMap<>();
@@ -73,8 +73,8 @@ public class Commands extends Event {
     }
 
     @Command("commands")
-    public void commands(CommandListener commandListener) {
-        commandListener.respond(languageManager.getAsString("commands.text.available.commands", getAvailableCommands(commandListener.getUser().getLevel())));
+    public void commands(CommandEvent commandEvent) {
+        commandEvent.respond(languageManager.getAsString("commands.text.available.commands", getAvailableCommands(commandEvent.getUser().getLevel())));
     }
 
     private String getAvailableCommands(Level level) {
@@ -145,9 +145,9 @@ public class Commands extends Event {
     }
 
     @Override
-    public void onInit(InitListener initListener) throws Exception {
+    public void onInit(InitEvent initEvent) throws Exception {
         languageManager = new LanguageManager("lang.Plugins");
 
-//        initListener.addHelp(this, new HelpRegister("commands", languageManager.getAsString("commands.help.text")));
+//        initEvent.addHelp(this, new HelpRegister("commands", languageManager.getAsString("commands.help.text")));
     }
 }

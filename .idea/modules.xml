@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/plugins_src/JavaScript/JavaScript.iml" filepath="$PROJECT_DIR$/plugins_src/JavaScript/JavaScript.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins_src/Person of Interest/Person of Interest.iml" filepath="$PROJECT_DIR$/plugins_src/Person of Interest/Person of Interest.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins_src/Utils/Utils.iml" filepath="$PROJECT_DIR$/plugins_src/Utils/Utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/jomp16-bot.iml" filepath="$PROJECT_DIR$/.idea/jomp16-bot.iml" />
     </modules>
   </component>
 </project>
-

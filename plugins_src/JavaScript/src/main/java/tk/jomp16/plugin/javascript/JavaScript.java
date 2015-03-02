@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -9,10 +9,10 @@
 package tk.jomp16.plugin.javascript;
 
 import lombok.extern.log4j.Log4j2;
-import tk.jomp16.irc.listener.listeners.CommandListener;
-import tk.jomp16.irc.listener.listeners.InitListener;
+import tk.jomp16.irc.event.events.CommandEvent;
+import tk.jomp16.irc.event.events.InitEvent;
 import tk.jomp16.plugin.command.Command;
-import tk.jomp16.plugin.event.Event;
+import tk.jomp16.plugin.event.PluginEvent;
 import tk.jomp16.plugin.help.HelpRegister;
 import tk.jomp16.plugin.level.Level;
 
@@ -22,48 +22,48 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 @Log4j2
-public class JavaScript extends Event {
+public class JavaScript extends PluginEvent {
     private ScriptEngine scriptEngine;
 
     @Override
-    public void onInit(InitListener initListener) {
+    public void onInit(InitEvent initEvent) {
         scriptEngine = new ScriptEngineManager().getEngineByName("JavaScript");
 
-        initListener.addHelp(new HelpRegister("js", new String[]{"javascript"}, "Run a java/javascript command", "-url the url or java/javascript command", Level.OWNER));
+        initEvent.addHelp(new HelpRegister("js", new String[]{"javascript"}, "Run a java/javascript command", "-url the url or java/javascript command", Level.OWNER));
     }
 
     @Command(value = "js", optCommands = "javascript", level = Level.OWNER, args = {"url:"})
-    public void js(CommandListener commandListener) {
-        if (commandListener.getMessage().length() > 0 || commandListener.getArgs().size() >= 1) {
-            scriptEngine.put("commandListener", commandListener);
+    public void js(CommandEvent commandEvent) {
+        if (commandEvent.getMessage().length() > 0 || commandEvent.getArgs().size() >= 1) {
+            scriptEngine.put("commandEvent", commandEvent);
 
-            if (commandListener.getOptionSet().has("url")) {
+            if (commandEvent.getOptionSet().has("url")) {
                 try {
-                    String jsOutput = String.valueOf(scriptEngine.eval(new InputStreamReader(new URL((String) commandListener.getOptionSet().valueOf("url")).openStream())));
+                    String jsOutput = String.valueOf(scriptEngine.eval(new InputStreamReader(new URL((String) commandEvent.getOptionSet().valueOf("url")).openStream())));
 
                     if (jsOutput != null) {
                         if (!jsOutput.equals("null")) {
-                            commandListener.respond(jsOutput, false);
+                            commandEvent.respond(jsOutput, false);
                         }
                     }
                 } catch (Exception e) {
-                    commandListener.respond(e.getMessage());
+                    commandEvent.respond(e.getMessage());
                 }
             } else {
                 try {
-                    String jsOutput = String.valueOf(scriptEngine.eval(commandListener.getMessage()));
+                    String jsOutput = String.valueOf(scriptEngine.eval(commandEvent.getMessage()));
 
                     if (jsOutput != null) {
                         if (!jsOutput.equals("null")) {
-                            commandListener.respond(jsOutput, false);
+                            commandEvent.respond(jsOutput, false);
                         }
                     }
                 } catch (Exception e) {
-                    commandListener.respond(e.getMessage());
+                    commandEvent.respond(e.getMessage());
                 }
             }
         } else {
-            commandListener.showUsage(commandListener.getCommand());
+            commandEvent.showUsage(commandEvent.getCommand());
         }
     }
 }

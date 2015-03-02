@@ -14,19 +14,20 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Gradle: org.projectlombok:lombok:1.14.8" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-lang3:3.3.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.javassist:javassist:3.18.2-GA" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.reflections:reflections:0.9.9" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.code.findbugs:annotations:2.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: net.sf.jopt-simple:jopt-simple:4.8" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.apache.logging.log4j:log4j-api:2.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.apache.logging.log4j:log4j-core:2.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: io.netty:netty-all:4.0.24.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12-beta-3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.projectlombok:lombok:1.16.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: net.sf.jopt-simple:jopt-simple:4.9-beta-1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.3.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: io.netty:netty-all:4.0.25.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.javassist:javassist:3.19.0-GA" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.magicwerk:brownies-collections:0.9.8" level="project" />
   </component>
 </module>

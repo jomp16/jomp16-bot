@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -20,11 +20,12 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.magicwerk.brownies.collections.GapList;
 import tk.jomp16.configuration.Configuration;
 import tk.jomp16.irc.channel.ChannelList;
+import tk.jomp16.irc.event.events.DisableEvent;
+import tk.jomp16.irc.event.events.InitEvent;
 import tk.jomp16.irc.handler.handlers.PrivMsgHandler;
-import tk.jomp16.irc.listener.listeners.DisableListener;
-import tk.jomp16.irc.listener.listeners.InitListener;
 import tk.jomp16.irc.netty.NettyDecoder;
 import tk.jomp16.irc.netty.NettyEncoder;
 import tk.jomp16.irc.netty.NettyHandler;
@@ -39,10 +40,13 @@ import tk.jomp16.plugin.PluginInfo;
 import tk.jomp16.plugin.PluginManager;
 import tk.jomp16.plugin.about.About;
 import tk.jomp16.plugin.command.Commands;
-import tk.jomp16.plugin.event.Event;
+import tk.jomp16.plugin.event.PluginEvent;
 import tk.jomp16.plugin.help.Help;
 
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -65,9 +69,9 @@ public class IrcManager {
     private ChannelList channelList;
     private ServerInfo serverInfo;
     private ExecutorService executor = Executors.newCachedThreadPool();
-    private List<Event> events = new ArrayList<>();
+    private List<PluginEvent> pluginEvents = new GapList<>();
     private Map<String, PluginInfo> pluginInfoHashMap = new HashMap<>();
-    private Multimap<String, Event> eventMultimap = HashMultimap.create();
+    private Multimap<String, PluginEvent> eventMultimap = HashMultimap.create();
 
     public IrcManager(Configuration configuration) throws Exception {
         this.configuration = configuration;
@@ -144,54 +148,52 @@ public class IrcManager {
         configuration.getChannels().forEach(outputIrc::joinChannel);
     }
 
-    public void registerEvent(Event event) {
-        events.add(event);
-        eventMultimap.put(event.getClass().getSimpleName(), event);
+    public void registerEvent(PluginEvent pluginEvent) {
+        log.debug("Loading plugin: " + pluginEvent.getClass().getSimpleName() + "...");
 
-        Runnable runnable = () -> {
-            try {
-                event.onInit(new InitListener(this, null, null, event));
-            } catch (Exception e) {
-                log.error(e, e);
-            }
+        pluginEvents.add(pluginEvent);
+        eventMultimap.put(pluginEvent.getClass().getSimpleName(), pluginEvent);
 
-            PrivMsgHandler.addCommandsFromEvent(event);
-            Help.addHelp(event);
-        };
+        try {
+            pluginEvent.onInit(new InitEvent(this, null, null, pluginEvent));
+        } catch (Exception e) {
+            log.error(e, e);
+        }
 
-        executor.execute(runnable);
+        PrivMsgHandler.addCommandsFromEvent(pluginEvent);
+        Help.addHelp(pluginEvent);
     }
 
     public void unregisterPlugin(Plugin plugin) {
         if (pluginInfoHashMap.containsKey(plugin.getPluginInfo().getName())) {
             pluginInfoHashMap.remove(plugin.getPluginInfo().getName());
 
-            Runnable runnable = () -> plugin.getEvents().forEach(event -> {
+            plugin.getPluginEvents().forEach(event -> {
                 try {
-                    event.onDisable(new DisableListener(this, null, null, event));
+                    event.onDisable(new DisableEvent(this, null, null, event));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                events.remove(event);
+                pluginEvents.remove(event);
                 eventMultimap.removeAll(plugin.getPluginInfo().getName());
                 PrivMsgHandler.removeCommandsFromEventName(event);
                 Help.removeHelp(event);
             });
-
-            executor.execute(runnable);
         }
     }
 
     public void registerPlugin(Plugin plugin) {
-        if (plugin.getEvents() != null && plugin.getEvents().size() != 0) {
-            events.addAll(plugin.getEvents());
-            eventMultimap.putAll(plugin.getPluginInfo().getName(), plugin.getEvents());
+        if (plugin.getPluginEvents() != null && plugin.getPluginEvents().size() != 0) {
+            log.debug("Loading plugin jar: " + plugin.getPluginInfo().getName() + "...");
+
+            pluginEvents.addAll(plugin.getPluginEvents());
+            eventMultimap.putAll(plugin.getPluginInfo().getName(), plugin.getPluginEvents());
             pluginInfoHashMap.put(plugin.getPluginInfo().getName(), plugin.getPluginInfo());
 
-            Runnable runnable = () -> plugin.getEvents().forEach(event -> {
+            plugin.getPluginEvents().forEach(event -> {
                 try {
-                    event.onInit(new InitListener(this, null, null, event));
+                    event.onInit(new InitEvent(this, null, null, event));
                 } catch (Exception e) {
                     log.error("An error happened when trying to init plugin!", e);
                 }
@@ -199,15 +201,13 @@ public class IrcManager {
                 PrivMsgHandler.addCommandsFromEvent(event);
                 Help.addHelp(event);
             });
-
-            executor.execute(runnable);
         }
     }
 
-    public PluginInfo getPluginInfoFromEvent(Event event) {
+    public PluginInfo getPluginInfoFromEvent(PluginEvent pluginEvent) {
         for (Plugin plugin : pluginManager.getPlugins()) {
-            for (Event event1 : plugin.getEvents()) {
-                if (event1.equals(event)) {
+            for (PluginEvent pluginEvent1 : plugin.getPluginEvents()) {
+                if (pluginEvent1.equals(pluginEvent)) {
                     return plugin.getPluginInfo();
                 }
             }

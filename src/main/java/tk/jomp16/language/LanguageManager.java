@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -10,9 +10,12 @@ package tk.jomp16.language;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import org.magicwerk.brownies.collections.GapList;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LanguageManager {
     private ResourceBundle resourceBundle;
@@ -31,19 +34,11 @@ public class LanguageManager {
     }
 
     public String getAsString(String key) {
-        if (resourceBundleControl.isJSON()) {
-            return this.getAsJsonElement(key).getAsString();
-        } else {
-            return resourceBundle.getString(key);
-        }
+        return this.getAsJsonElement(key).getAsString();
     }
 
     public String getAsString(String key, Object... params) {
-        if (resourceBundleControl.isJSON()) {
-            return MessageFormat.format(this.getAsJsonElement(key).getAsString(), params);
-        } else {
-            return MessageFormat.format(resourceBundle.getString(key), params);
-        }
+        return MessageFormat.format(this.getAsJsonElement(key).getAsString(), params);
     }
 
     public Object getAsObject(String key) {
@@ -51,76 +46,50 @@ public class LanguageManager {
     }
 
     public JsonElement getAsJsonElement(String key) {
-        if (resourceBundleControl.isJSON()) {
-            return (JsonElement) this.getAsObject(key);
-        } else {
-            throw new UnsupportedOperationException("LanguageManager isn't JSON!");
-        }
+        return (JsonElement) this.getAsObject(key);
     }
 
     public List<JsonElement> getArrayAsJsonElement(String key) {
-        if (resourceBundleControl.isJSON()) {
-            List<JsonElement> elements = new ArrayList<>();
+        List<JsonElement> elements = new GapList<>();
 
-            JsonArray jsonArray = (JsonArray) this.getAsObject(key);
+        JsonArray jsonArray = (JsonArray) this.getAsObject(key);
 
-            jsonArray.forEach(elements::add);
+        jsonArray.forEach(elements::add);
 
-            return elements;
-        } else {
-            throw new UnsupportedOperationException("LanguageManager isn't JSON!");
-        }
+        return elements;
     }
 
     public List<String> getArrayAsString(String key) {
-        if (resourceBundleControl.isJSON()) {
-            List<String> elements = new ArrayList<>();
+        List<String> elements = new GapList<>();
 
-            JsonArray jsonArray = (JsonArray) this.getAsObject(key);
+        JsonArray jsonArray = (JsonArray) this.getAsObject(key);
 
-            jsonArray.forEach(element -> elements.add(element.getAsString()));
+        jsonArray.forEach(element -> elements.add(element.getAsString()));
 
-            return elements;
-        } else {
-            return Arrays.asList(resourceBundle.getStringArray(key));
-        }
+        return elements;
     }
 
     public List<String> getArrayAsString(String key, Object... params) {
-        if (resourceBundleControl.isJSON()) {
-            List<String> elements = new ArrayList<>();
+        List<String> elements = new GapList<>();
 
-            JsonArray jsonArray = (JsonArray) this.getAsObject(key);
+        JsonArray jsonArray = (JsonArray) this.getAsObject(key);
 
-            jsonArray.forEach(element -> {
-                elements.add(MessageFormat.format(element.getAsString(), params));
-            });
+        jsonArray.forEach(element -> {
+            elements.add(MessageFormat.format(element.getAsString(), params));
+        });
 
-            return elements;
-        } else {
-            List<String> elements = new ArrayList<>();
-
-            for (String tmp : resourceBundle.getStringArray(key)) {
-                elements.add(MessageFormat.format(tmp, params));
-            }
-
-            return elements;
-        }
+        return elements;
     }
 
     public <T> List<T> getJsonArrayAsClass(String key, Class<T> tClass) {
-        if (resourceBundleControl.isJSON()) {
-            List<T> arrayList = new ArrayList<>();
+        List<T> arrayList = new GapList<>();
 
-            this.getArrayAsJsonElement(key).forEach(element -> {
-                String tmp = resourceBundleControl.getGson().toJson(element);
-                arrayList.add(resourceBundleControl.getGson().fromJson(tmp, tClass));
-            });
+        this.getArrayAsJsonElement(key).forEach(element -> {
+            String tmp = resourceBundleControl.getGson().toJson(element);
+            arrayList.add(resourceBundleControl.getGson().fromJson(tmp, tClass));
+        });
 
-            return arrayList;
-        } else {
-            throw new UnsupportedOperationException("LanguageManager isn't JSON!");
-        }
+        return arrayList;
     }
 
     public ResourceBundle getResourceBundle() {

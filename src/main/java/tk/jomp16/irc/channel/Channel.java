@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -11,10 +11,10 @@ package tk.jomp16.irc.channel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.magicwerk.brownies.collections.GapList;
 import tk.jomp16.irc.IrcManager;
 import tk.jomp16.irc.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +24,6 @@ import java.util.Map;
 public class Channel {
     private final IrcManager ircManager;
     private final String targetName;
-
 
     public ChannelActions getChannelActions() {
         if (targetName.startsWith("#")) {
@@ -44,7 +43,7 @@ public class Channel {
 
     public List<User> getAllUsers() {
         if (targetName.startsWith("#")) {
-            return new ArrayList<>(ircManager.getChannelList().getListUsers(targetName).keySet());
+            return new GapList<>(ircManager.getChannelList().getListUsers(targetName).keySet());
         }
 
         return null;
@@ -52,7 +51,7 @@ public class Channel {
 
     public List<User> getAllOpUsers() {
         if (targetName.startsWith("#")) {
-            List<User> opUsers = new ArrayList<>();
+            List<User> opUsers = new GapList<>();
 
             ircManager.getChannelList().getListUsers(targetName).forEach((user, level) -> {
                 if (level.equals(ChannelLevel.OP)) {
@@ -68,7 +67,7 @@ public class Channel {
 
     public List<User> getAllVoiceUsers() {
         if (targetName.startsWith("#")) {
-            List<User> voiceUsers = new ArrayList<>();
+            List<User> voiceUsers = new GapList<>();
 
             ircManager.getChannelList().getListUsers(targetName).forEach((user, level) -> {
                 if (level.equals(ChannelLevel.VOICE)) {
@@ -84,7 +83,7 @@ public class Channel {
 
     public List<User> getAllNormalUsers() {
         if (targetName.startsWith("#")) {
-            List<User> normalUsers = new ArrayList<>();
+            List<User> normalUsers = new GapList<>();
 
             ircManager.getChannelList().getListUsers(targetName).forEach((user, level) -> {
                 if (level.equals(ChannelLevel.NORMAL)) {

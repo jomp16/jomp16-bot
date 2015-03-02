@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -10,7 +10,7 @@ package tk.jomp16.plugin;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import tk.jomp16.plugin.event.Event;
+import tk.jomp16.plugin.event.PluginEvent;
 
 import java.net.URLClassLoader;
 import java.util.List;
@@ -20,6 +20,6 @@ import java.util.List;
 public class Plugin {
     private final PluginInfo pluginInfo;
     private final String md5sums;
-    private final List<Event> events;
+    private final List<PluginEvent> pluginEvents;
     private final URLClassLoader urlClassLoader;
 }

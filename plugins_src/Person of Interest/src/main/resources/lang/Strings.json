@@ -1,0 +1,6 @@
+{
+  "episodes.url.path": "http://www.tv.com/shows/person-of-interest-2011/episodes/",
+  "episodes.season.url.path": "http://www.tv.com/shows/person-of-interest-2011/{0}",
+  "episode.info": "PoI {0} - {1} - Air date: {2} - {3}",
+  "user.agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36"
+}

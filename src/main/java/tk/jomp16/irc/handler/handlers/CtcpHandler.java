@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import tk.jomp16.irc.IrcManager;
 import tk.jomp16.irc.channel.Channel;
 import tk.jomp16.irc.handler.Handler;
-import tk.jomp16.irc.listener.listeners.DccFileSendListener;
+import tk.jomp16.irc.event.events.DccFileSendEvent;
 import tk.jomp16.irc.parser.parsers.CtcpParser;
 import tk.jomp16.irc.user.User;
 import tk.jomp16.utils.Utils;
@@ -64,7 +64,7 @@ public class CtcpHandler implements Handler {
     }
 
     @Override
-    public void respond() {
+    public void handle() {
         switch (ctcpCommand) {
             case TIME:
                 ircManager.getOutputCtcp().sendResponseNotice(channel.getTargetName(), "TIME " + Instant.now());
@@ -75,15 +75,15 @@ public class CtcpHandler implements Handler {
                 List<String> parsedInput = Utils.tokenizeDccRequest(raw.replace("\001", ""));
 
                 if (parsedInput.get(1).equals("SEND")) {
-                    Runnable runnable = () -> ircManager.getEvents().forEach((event) -> {
+                    Runnable runnable = () -> ircManager.getPluginEvents().forEach((event) -> {
                         try {
-                            DccFileSendListener dccFileSendListener = new DccFileSendListener(ircManager, user, channel, event);
-                            dccFileSendListener.setFileName(parsedInput.get(2).replace("\"", ""));
-                            dccFileSendListener.setIp(parsedInput.get(3));
-                            dccFileSendListener.setPort(Integer.parseInt(parsedInput.get(4)));
-                            dccFileSendListener.setBytes(Long.parseLong(parsedInput.get(5)));
+                            DccFileSendEvent dccFileSendEvent = new DccFileSendEvent(ircManager, user, channel, event);
+                            dccFileSendEvent.setFileName(parsedInput.get(2).replace("\"", ""));
+                            dccFileSendEvent.setIp(parsedInput.get(3));
+                            dccFileSendEvent.setPort(Integer.parseInt(parsedInput.get(4)));
+                            dccFileSendEvent.setBytes(Long.parseLong(parsedInput.get(5)));
 
-                            event.onDccFileSend(dccFileSendListener);
+                            event.onDccFileSend(dccFileSendEvent);
                         } catch (Exception e) {
                             log.error("An error happened!", e);
                         }

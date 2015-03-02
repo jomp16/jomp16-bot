@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -9,9 +9,9 @@
 package tk.jomp16.properties;
 
 import com.google.gson.*;
+import org.magicwerk.brownies.collections.GapList;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +119,7 @@ public class JsonProperties {
     }
 
     public List<JsonElement> getJsonArrayAsJsonElement(String key) {
-        List<JsonElement> arrayList = new ArrayList<>();
+        List<JsonElement> arrayList = new GapList<>();
 
         propertiesArrayMap.get(key).forEach(arrayList::add);
 
@@ -127,7 +127,7 @@ public class JsonProperties {
     }
 
     public List<String> getJsonArrayAsString(String key) {
-        List<String> arrayList = new ArrayList<>();
+        List<String> arrayList = new GapList<>();
 
         getJsonArrayAsJsonElement(key).forEach(element -> {
             JsonPrimitive jsonPrimitive = (JsonPrimitive) element;
@@ -141,7 +141,7 @@ public class JsonProperties {
     }
 
     public <T> List<T> getJsonArrayAsClass(String key, Class<T> tClass) {
-        List<T> arrayList = new ArrayList<>();
+        List<T> arrayList = new GapList<>();
 
         getJsonArrayAsJsonElement(key).forEach(element -> {
             String tmp = gson.toJson(element);

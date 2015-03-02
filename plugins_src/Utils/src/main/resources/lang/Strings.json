@@ -1,5 +1,6 @@
 {
-    "currency.respond": "Currency: {0} {1} to {2} equals {3} {2} | 1 {1} to {2} equals {4}",
-    "currency.help": "Get currency",
-    "currency.usage": "quantity fromCurrency toCurrency"
+  "currency.respond": "Currency: {0} {1} to {2} equals {3} {2} | 1 {1} to {2} equals {4}",
+  "currency.help": "Get currency",
+  "currency.usage": "quantity fromCurrency toCurrency",
+  "user.agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36"
 }

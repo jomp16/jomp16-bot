@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -13,8 +13,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.magicwerk.brownies.collections.GapList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -70,10 +70,10 @@ public class Configuration {
         private String saslUser = "placeholder";
         private String password = "placeholder";
         private String prefix = "*";
-        private List<String> channels = new ArrayList<>();
-        private List<String> owners = new ArrayList<>();
-        private List<String> admins = new ArrayList<>();
-        private List<String> mods = new ArrayList<>();
+        private List<String> channels = new GapList<>();
+        private List<String> owners = new GapList<>();
+        private List<String> admins = new GapList<>();
+        private List<String> mods = new GapList<>();
         private int port = 6667;
 
         public Builder addChannel(String channel) {

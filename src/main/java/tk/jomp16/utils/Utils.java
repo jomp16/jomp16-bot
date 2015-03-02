@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -15,9 +15,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.magicwerk.brownies.collections.GapList;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
@@ -30,7 +30,7 @@ public class Utils {
      * @author PircBotX team
      */
     public static List<String> tokenizeLine(String input) {
-        List<String> stringParts = new ArrayList<>();
+        List<String> stringParts = new GapList<>();
         if (input == null || input.length() == 0) {
             return stringParts;
         }
@@ -65,7 +65,7 @@ public class Utils {
         // This is a slightly modified version of Utils.tokenizeLine to parse
         // potential quotes in file names
         int quotesIndexEnd = request.lastIndexOf('"');
-        List<String> stringParts = new ArrayList<>();
+        List<String> stringParts = new GapList<>();
         int pos = 0, end;
         while ((end = request.indexOf(' ', pos)) >= 0) {
             if (pos >= quotesIndexBegin && end < quotesIndexEnd) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 jomp16 <joseoliviopedrosa@gmail.com>
+ * Copyright © 2015 jomp16 <joseoliviopedrosa@gmail.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import tk.jomp16.irc.IrcManager;
 import tk.jomp16.irc.channel.Channel;
 import tk.jomp16.irc.handler.Handler;
-import tk.jomp16.irc.listener.listeners.ModeListener;
+import tk.jomp16.irc.event.events.ModeEvent;
 import tk.jomp16.irc.modes.Mode;
 import tk.jomp16.irc.user.User;
 
@@ -27,14 +27,14 @@ public class ModeHandler implements Handler {
     private final String userModded;
 
     @Override
-    public void respond() {
-        Runnable runnable = () -> ircManager.getEvents().forEach((event) -> {
+    public void handle() {
+        Runnable runnable = () -> ircManager.getPluginEvents().forEach((event) -> {
             try {
-                ModeListener modeListener = new ModeListener(ircManager, user, channel, event);
-                modeListener.setMode(mode);
-                modeListener.setUserModded(userModded);
+                ModeEvent modeEvent = new ModeEvent(ircManager, user, channel, event);
+                modeEvent.setMode(mode);
+                modeEvent.setUserModded(userModded);
 
-                event.onMode(modeListener);
+                event.onMode(modeEvent);
             } catch (Exception e) {
                 log.error("An error happened!", e);
             }
